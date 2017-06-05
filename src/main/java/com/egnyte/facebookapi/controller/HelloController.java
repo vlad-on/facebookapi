@@ -2,28 +2,32 @@ package com.egnyte.facebookapi.controller;
 
 import com.egnyte.facebookapi.SearchedPlace;
 import org.json.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.social.facebook.api.Location;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/")
-//TODO: PropertySource + Spring Boot?
-//@PropertySource("classpath:application.properties")
+@PropertySource("application.properties")
 public class HelloController {
 
-    final String appId = "462724750743444";
-    final String appSecret = "e6ddc6ab45d201c143ef677ba7285da4";
+    @Value("${spring.social.facebook.app-id}")
+    private String appId;
+    @Value("${spring.social.facebook.app-secret}")
+    private String appSecret;
+    private final String ACCESS_TOKEN = appId + "|" + appSecret;
 
-    final String ACCESS_TOKEN = appId + "|" + appSecret;
-
-    List<SearchedPlace> searchedPlace = new ArrayList<>();
-
-    RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate = new RestTemplate();
 
 //    private Facebook facebook;
 //    private ConnectionRepository connectionRepository;
@@ -65,7 +69,7 @@ public class HelloController {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        System.out.println(new File("C:\\Users\\Vlad\\IdeaProjects\\facebookapi\\src\\main\\resources\\application.properties").getAbsolutePath());
         String urlCountry = "https://graph.facebook.com/v2.9/search?q=kyiv&type=adgeolocation&location_types=['country']&access_token=" + ACCESS_TOKEN;
 
 //        ResponseEntity<Place[]> places = restTemplate.getForEntity(cities, Place[].class);
@@ -75,10 +79,19 @@ public class HelloController {
 
     @RequestMapping(value = "{countryName}/{cityName}/{place}", method = RequestMethod.GET)
     public String getSearchRequest(Model model, @PathVariable String countryName, @PathVariable String cityName, @PathVariable String place) {
-        System.out.println(countryName);
-        return "hello";
+        String allPlacesByName = getAllSearchedPlaces(place);
+        return getPlacesInLocation(allPlacesByName, countryName, cityName);
     }
 
+    private String getPlacesInLocation(String allPlacesByName, String countryName, String cityName) {
+        return null;
+    }
+
+    // $placeName can be partial name
+    private String getAllSearchedPlaces(String placeName) {
+        String urlPlacesByName = "https://graph.facebook.com/v2.9/search?q=egn&type=place&fields=id,name,location{city,city_id,country,country_code,latitude,longitude}" + ACCESS_TOKEN;
+        return null;
+    }
 
     public void displayHeaderInfo(@RequestHeader("Accept-Encoding") String encoding,
                                   @RequestHeader("Keep-Alive") long keepAlive)  {

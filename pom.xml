@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.egnyte.facebookapi</groupId>
-	<artifactId>demo</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>facebookapi</artifactId>
+	<version>0.0.2-SNAPSHOT</version>
 
 	<name>facebookapi</name>
 	<description>facebook api use for egnyte</description>
