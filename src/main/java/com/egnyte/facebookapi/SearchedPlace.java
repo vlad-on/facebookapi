@@ -1,6 +1,6 @@
 package com.egnyte.facebookapi;
 
-import org.springframework.social.facebook.api.Location;
+import com.google.gson.annotations.Expose;
 
 /**
  * Created by Vlad on 04.06.2017.
@@ -11,8 +11,17 @@ public class SearchedPlace {
     private String searchedCityName;
     private String searchedPlace;
 
-    private String placeName;
-    private Location location;
+    private String id;
+    @Expose
+    private String name;
+    private String city;
+    private String cityId;
+    private String country;
+    private String countryCode;
+    @Expose
+    private Double latitude;
+    @Expose
+    private Double longitude;
 
     public SearchedPlace() {
     }
@@ -23,52 +32,64 @@ public class SearchedPlace {
         this.searchedPlace = searchedPlace;
     }
 
-    public String getSearchedCountryName() {
-        return searchedCountryName;
-    }
-
-    public void setSearchedCountryName(String searchedCountryName) {
-        this.searchedCountryName = searchedCountryName;
-    }
-
-    public String getSearchedCityName() {
-        return searchedCityName;
-    }
-
-    public void setSearchedCityName(String searchedCityName) {
-        this.searchedCityName = searchedCityName;
-    }
-
-    public String getSearchedPlace() {
-        return searchedPlace;
-    }
-
-    public void setSearchedPlace(String searchedPlace) {
-        this.searchedPlace = searchedPlace;
-    }
-
-    public String getPlaceName() {
-        return placeName;
-    }
-
-    public void setPlaceName(String placeName) {
-        this.placeName = placeName;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
     @Override
     public String toString() {
         return "{" +
-                "\"name\":" + getPlaceName() + '\'' +
-                "latitude:" + location.getLatitude() + '\'' +
-                ", longitude" + location.getLongitude() +
+                "\"name\":" + getName() + '\'' +
+                "latitude:" + getLatitude() + '\'' +
+                ", longitude" + getLongitude() +
                 '}';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    private Double getLatitude() {
+        return latitude;
+    }
+
+    private Double getLongitude() {
+        return longitude;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getCountry() {
+        return country;
     }
 }
