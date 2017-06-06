@@ -23,6 +23,7 @@ public class HelloController {
 
     private static final String BASE_URL = "https://graph.facebook.com/v2.9/";
     //    @Value("${spring.social.facebook.app-id}")
+    //TODO: read from property file
     private String appId = "462724750743444";
     //    @Value("${spring.social.facebook.app-secret}")
     private String appSecret = "e6ddc6ab45d201c143ef677ba7285da4";
