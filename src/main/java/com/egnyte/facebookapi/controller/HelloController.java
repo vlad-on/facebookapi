@@ -6,7 +6,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -47,18 +46,17 @@ public class HelloController {
 //        PagedList<Post> feed = facebook.feedOperations().getFeed();
 //        model.addAttribute("feed", feed);
 //        return "hello";
-
-        String urlCity = BASE_URL + "search?q=Poznan&type=adgeolocation&location_types=['city']&access_token=" + ACCESS_TOKEN;
-        RestTemplate restTemplate = new RestTemplate();
-        String citiesJson = restTemplate.getForObject(urlCity, String.class);
-        System.out.println(citiesJson);
+//
+//        String urlCity = BASE_URL + "search?q=Poznan&type=adgeolocation&location_types=['city']&access_token=" + ACCESS_TOKEN;
+//        RestTemplate restTemplate = new RestTemplate();
+//        String citiesJson = restTemplate.getForObject(urlCity, String.class);
+//        System.out.println(citiesJson);
         return "hello";
     }
 
     @RequestMapping(value = "{countryName}/{cityName}/{place}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public String getSearchRequest(Model model, @PathVariable String countryName, @PathVariable String cityName, @PathVariable String place) {
-        System.out.println("in the g/f/d");
+    public String getSearchRequest(@PathVariable String countryName, @PathVariable String cityName, @PathVariable String place) {
         List<SearchedPlace> allPlacesByName = getAllSearchedPlaces(place);
         System.out.println("got all places");
         List<SearchedPlace> placesInLocation = getPlacesInLocation(allPlacesByName, countryName, cityName);
@@ -75,7 +73,6 @@ public class HelloController {
     // $placeName can be partial name
     private List<SearchedPlace> getAllSearchedPlaces(String placeName) {
         String urlPlacesByName = BASE_URL + "search?q=" + placeName + "&type=place&fields=id,name,location{city,city_id,country,country_code,latitude,longitude}&access_token=" + ACCESS_TOKEN;
-        System.out.println(urlPlacesByName);
 
         String nextUrl = urlPlacesByName;
         List<SearchedPlace> searchedPlaces = new ArrayList<>();
@@ -88,7 +85,6 @@ public class HelloController {
                 JsonParser parser = new JsonParser();
                 JsonObject jsonRaw = parser.parse(jsonInput).getAsJsonObject();
 
-                System.out.println(jsonRaw);
                 JsonArray data = jsonRaw.get("data").getAsJsonArray();
 
                 for (JsonElement dataElem : data) {
@@ -96,7 +92,6 @@ public class HelloController {
                         JsonObject j = parser.parse(dataElem.toString()).getAsJsonObject();
                         String id = j.get("id").getAsString();
                         String name = j.get("name").getAsString();
-                        System.out.println("blabla="+name);
                         JsonObject location = j.get("location").getAsJsonObject();
                         String city = null;
                         String city_id = null;
@@ -173,28 +168,15 @@ public class HelloController {
         List<SearchedPlace> placesInLocation = new ArrayList<>();
         for (SearchedPlace searchedPlace : allPlacesByName) {
             try {
-                boolean isCountryNameMatch;
-                if (countryName.toLowerCase().equals("anycountry")){ //just feature
-                    isCountryNameMatch = true;
-                } else {
-                    isCountryNameMatch = searchedPlace.getCountry().toLowerCase().equals(countryName.toLowerCase());
-                    System.out.println(searchedPlace.getCountry().toLowerCase() + " and " + countryName.toLowerCase() + " is equal " + isCountryNameMatch);
-                }
-
-                boolean isCityNameMatch;
-                if (cityName.toLowerCase().equals("anycity")){ //just feature
-                    isCityNameMatch = true;
-                } else {
-                    isCityNameMatch = searchedPlace.getCity().toLowerCase().equals(cityName.toLowerCase());
-                    System.out.println(searchedPlace.getCity().toLowerCase() + " and " + cityName.toLowerCase() + " is equal " + isCityNameMatch);
-                }
+                boolean isCountryNameMatch = countryName.toLowerCase().equals("anycountry") || searchedPlace.getCountry().toLowerCase().equals(countryName.toLowerCase()); //just feature to be able search by any
+                boolean isCityNameMatch = cityName.toLowerCase().equals("anycity") || searchedPlace.getCity().toLowerCase().equals(cityName.toLowerCase()); //just feature
 
                 if (isCountryNameMatch && isCityNameMatch) {
                     placesInLocation.add(searchedPlace);
                     System.out.println("added " + searchedPlace.getName());
                 }
             } catch (NullPointerException e) {
-                System.out.println("no country or city in place named " + searchedPlace.getName());
+                System.out.println("no country or city has a place named " + searchedPlace.getName());
             }
         }
 

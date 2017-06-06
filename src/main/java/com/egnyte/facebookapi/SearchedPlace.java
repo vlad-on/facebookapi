@@ -14,8 +14,10 @@ public class SearchedPlace {
     private String id;
     @Expose
     private String name;
+    @Expose
     private String city;
     private String cityId;
+    @Expose
     private String country;
     private String countryCode;
     @Expose
@@ -36,6 +38,8 @@ public class SearchedPlace {
     public String toString() {
         return "{" +
                 "\"name\":" + getName() + '\'' +
+                "city:" + getCity() + '\'' +
+                "country:" + getCountry() + '\'' +
                 "latitude:" + getLatitude() + '\'' +
                 ", longitude" + getLongitude() +
                 '}';
